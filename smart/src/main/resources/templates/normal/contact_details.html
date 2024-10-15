@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{normal/base::Layout(~{::section})}">
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="normal/base::Layout(~{::section})">-->
+
+<head>
+	<meta charset="UTF-8">
+	<title>This is contact detail page</title>
+
+</head>
+
+<body>
+
+	<section class="mt-5 d-flex justify-content-end mx-3">
+		<div class="col-md-10 card mt-2 pl-2 shadow-2-strong">
+			<div th:if="${Contacts}" class="card-body">
+				<div class="text-center">
+					<img class="profile_pics_contact_details mx-auto" th:src="@{'/img/'+${Contacts.Cimage}}"
+						alt="profile image">
+				</div>
+				<div class="contact-details mt-4">
+					<h2 class="text-center font-colors" th:text="${Contacts.Cname}+' (' + ${Contacts.secondName} + ')'">
+					</h2>
+					<!--<p class="text-center text-muted" th:text="${Contacts.secondName}"></p>-->
+					<div class="details-table mt-4">
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<th class="text-center" scope="row">Email</th>
+									<td class="text-center" th:text="${Contacts.Cemail}"></td>
+								</tr>
+								<tr>
+									<th class="text-center" scope="row">Phone</th>
+									<td class="text-center" th:text="${Contacts.phone}"></td>
+								</tr>
+								<tr>
+									<th class="text-center" scope="row">Work</th>
+									<td class="text-center" th:text="${Contacts.work}"></td>
+								</tr>
+
+
+
+							</tbody>
+
+						</table>
+						<div>
+							<p class="text-center font-colors" scope="row">Description</p>
+							<div class="text-center" th:utext="${Contacts.decription}"></div>
+						</div>
+
+
+						<div class="d-grid gap-2 custom-width mt-5">
+
+
+							<button
+								th:onclick="|confirmDeleteContact(${Contacts.Cid}, ${currentPage ?: 1}, ${pageSize ?: 10})|"
+								class="btn btn-danger btn-md mb-2"> DELETE &nbsp;<i
+									class="fa-solid fa-trash"></i></button>
+
+
+
+							<form method="post" th:action="@{'/user/update-Contact/'+${Contacts.Cid}}">
+								<button class="btn btn-warning btn-md w-100" type="submit"> UPDATE &nbsp;<i
+										class="fa-solid fa-pen-to-square"></i></button>
+							</form>
+
+
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div th:unless="${Contacts}"
+				class="font-colors p-3 text-center d-flex flex-column justify-content-center align-items-center">
+				<h3 class="text-danger"> Oh! Sorry, You don't have permission to see this contact details..</h3>
+				<div class="my-3">
+					<a th:href="@{/user/view-contact/0}"> <button class="btn btn-danger btn-md "> GO BACK <br><i
+								class="fa-solid fa-hand-point-left"></i></button> </a>
+				</div>
+			</div>
+		</div>
+
+		
+
+	</section>
+
+</body>
+
+</html>

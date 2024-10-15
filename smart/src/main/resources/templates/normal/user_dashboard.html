@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{normal/base::Layout(~{::section})}">
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="normal/base::Layout(~{::section})">-->
+
+<head>
+	<meta charset="UTF-8">
+	<title>This is index page</title>
+	
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+	<style>
+		
+		
+		.great-vibes {
+		    font-family: 'Great Vibes', cursive; /* Use Great Vibes font */
+		    color: #4A90E2; /* Change color for the name */
+		    margin-bottom: 0.5rem; /* Spacing between elements */
+		}
+
+		.display-4 {
+		    font-size: 2.5rem; /* Larger font size for the name */
+		    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+		}
+
+		.lead {
+		    font-size: 1.25rem; /* Adjusted size for the email */
+		    color: #6c757d; /* Muted color for the email text */
+		}
+
+	</style>
+	
+</head>
+
+<body>
+	<section>
+	
+		       <div class="banner d-flex justify-content-center align-items-center">
+		         
+				
+				<div class="container mt-5">
+				    <div class="text-center">
+				        <h1 class="font-weight-bold display-4 font-color">User Dashboard</h1>
+				        <div class="d-flex justify-content-center align-items-center mb-4">
+				            <p class="lead text-light">
+				                Welcome to Smart Contact Manager, your ultimate solution for organizing and managing your contacts efficiently. Our platform offers seamless integration, advanced search capabilities, and secure storage, ensuring you can access and manage your contacts anytime, anywhere.
+				            </p>
+				        </div>
+				        <div class="mb-4">
+							<h2 class="great-vibes display-4">Welcome, <span th:text="${user.name}"></span>!</h2>
+							<p class="great-vibes lead">Your email: <span th:text="${user.email}"></span></p>
+							             
+							       </div>
+
+				        <button class="btn btn-lg bg-primary-made mx-2">Get Started</button>
+				        <a th:href="@{/logout}">
+				            <button class="btn btn-lg btn-danger mx-2">Logout</button>
+				        </a>
+				    </div>
+				</div>
+
+				
+				
+		       </div>
+		  
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			$(document).ready(() => {
+				$(".item").removeClass("actives");
+				$("#home-link").addClass("actives");
+
+			});
+		</script>
+
+
+	</section>
+
+
+
+	
+</body>
+
+</html>

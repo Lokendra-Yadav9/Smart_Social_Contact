@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{normal/base::Layout(~{::section})}">
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="normal/base::Layout(~{::section})">-->
+
+<head>
+	<meta charset="UTF-8">
+	<title>This is view contact page</title>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+	<section class="row mt-5 px-4  d-flex justify-content-end">
+		<div class="col-md-1"></div>
+		<div class="col-md-11 card mt-2 pl-2 shadow-2-strong">
+			<div class="card-body" th:if="${hasContacts}">
+				<!--<div class="table-responsive mb-3">-->
+				<h2 class="text-center font-colors">Your Contacts</h2>
+
+				<div tyle="float: left;" th:if="${session.message}" th:classappend="${session.message.type}"
+					role="alert" class="alert alert-dismissible fade show text-center">
+					<span class="text-center" th:text="${session.message.content}"></span>
+					<button type="button" class="close btn ml-2" data-dismiss="alert" aria-label="Close"
+						style="position: absolute; right: 10px; top: 10px;">
+						<span aria-hidden="true" class="">X</span>
+					</button>
+					<th:block th:text="${@sessionHelper.removeMessageFromSession()}"></th:block>
+				</div>
+
+				<!--  adding the select pages box -->
+				<div style="float: right;">
+					<form th:action="@{/user/view-contact/0}" method="get" class="mb-3">
+						<label for="pageSize" class="stylish-label">Contacts per page:</label>
+						<select name="pageSize" id="pageSize" class="stylish-select" onchange="this.form.submit()">
+							<option value="5" th:selected="${pageSize == 5}">5</option>
+							<option value="10" th:selected="${pageSize == 10}">10</option>
+							<option value="20" th:selected="${pageSize == 20}">20</option>
+						</select>
+					</form>
+				</div>
+
+
+
+
+				<!-- Display the user list with delete buttons -->
+
+				<div class="d-flex justify-content-start mb-3">
+					<button th:data-user-id="${UserId}" onclick="confirmDeleteAllContacts(this)"
+						class="btn btn-danger btn-sm responsive-btn">
+						<span class="button-text">DELETE ALL &nbsp; </span><i class="fa-solid fa-trash"></i>
+					</button>
+				</div>
+
+				<div class="search-container mt-3">
+
+					<input onkeyup="search()" type="text" id="search-input" class="form-control custom-placeholder2"
+						placeholder="Search contacts">
+
+					<div class="search-contact">
+
+					</div>
+
+				</div>
+
+
+				<div class="table-responsive mb-3">
+					<table class="table  table-sm table-hover align-middle caption-top">
+						<caption>List of Contacts</caption>
+						<thead class="table-success  align-middle">
+							<tr>
+								<th class="text-center font-colors" scope="col">#ID</th>
+								<th scope="col">Name</th>
+								<th scope="col">Phone</th>
+								<th class="text-center" scope="col">Email</th>
+								<th class="text-center" scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody class="table-group-divider">
+							<tr th:each="c:${Contacts}">
+								<th class="text-center font-colors" scope="row" th:text="${'CMN2024-'+c.Cid}">1</th>
+								<td> <img class="profile_pics_contact" th:src="@{'/img/'+${c.Cimage}}"
+										alt="profile image"> &nbsp; <span th:text="${c.Cname}"></span> </td>
+
+								<td th:text="${c.phone}"></td>
+
+								<td class="text-center">
+									<a
+										th:href="@{'/user/' + ${c.Cid} + '/contact?page=' + ${currentPage} + '&pageSize=' + ${pageSize}}">
+										<span th:text="${c.Cemail}"></span>
+									</a>
+								</td>
+
+								<!--<td class="text-center"><a href="#" th:href="@{'/user/'+${c.Cid}+'/contact'}"> <span th:text="${c.Cemail}">
+									</a></span></td>
+									-->
+
+								<td class="text-center "
+									style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+									<button th:onclick="|confirmDeleteContact(${c.Cid}, ${currentPage}, ${pageSize})|"
+										class="btn btn-danger btn-sm">
+										<i class="fa-solid fa-trash"></i>
+									</button>
+
+
+									<form method="post" th:action="@{'/user/update-Contact/'+${c.Cid}}">
+										<button class="btn btn-warning btn-sm" type="submit"><i
+												class="fa-solid fa-pen-to-square"></i></button>
+									</form>
+
+									<!--     @{'/user/delete/' + ${c.Cid} + '?page=' + ${currentPage} + '&pageSize=' + ${pageSize}}     -->
+
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+				<!-- Pagination -->
+				<nav aria-label="Page navigation example mt-5">
+					<ul class="pagination">
+						<li th:classappend="${currentPage == 0 ? 'disabled' : ''}" class="page-item">
+							<a th:href="@{'/user/view-contact/' + (${currentPage - 1}) + '?pageSize=' + ${pageSize}}"
+								class="page-link font-colors" aria-label="Previous">
+								<span aria-hidden="true" class="font-colors">&laquo;</span>
+							</a>
+						</li>
+
+						<li th:classappend="${currentPage == i - 1 ? 'active' : ''}"
+							th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
+							<a style="text-decoration: none;"
+								th:href="@{'/user/view-contact/' + (${i - 1}) + '?pageSize=' + ${pageSize}}"
+								class="page-link">
+								<span th:text="${i}"></span>
+							</a>
+						</li>
+
+						<li th:classappend="${currentPage + 1 == totalPage ? 'disabled' : ''}" class="page-item">
+							<a th:href="@{'/user/view-contact/' + (${currentPage + 1}) + '?pageSize=' + ${pageSize}}"
+								class="page-link font-colors" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+
+			<!--  if condition for contacts is null -->
+			<div class="font-colors p-3 text-center d-flex flex-column justify-content-center align-items-center">
+				<h3 class="text-danger" th:unless="${hasContacts}">Oh! Sorry, You don't have any contacts !!..</h3>
+				<div class="my-3">
+					<a th:href="@{/user/new-contact}">
+						<button class="btn btn-danger btn-md">Add New Contacts
+							<br><i class="fa-solid fa-user-plus"></i>
+						</button>
+					</a>
+				</div>
+			</div>
+
+		</div>
+
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			$(document).ready(() => {
+				$(".item").removeClass("actives");
+				$("#View-link").addClass("actives");
+
+			});
+		</script>
+
+	</section>
+
+
+
+</body>
+
+</html>
